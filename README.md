@@ -1,5 +1,4 @@
 # RepliCat
-# RepliCat
 
 *Reverse-Engineering Creativity – From Image to Model-Ready Prompt*
 
