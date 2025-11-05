@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RepliCat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+      /* Base styles */
+      :root {
+        color-scheme: light;
+        --text-main: #000000;
+        --text-secondary: #555555;
+        --text-heading: #000000; 
+        --primary: #00FFFF; /* Cyan */
+        --accent: #FF00FF; /* Magenta */
+        --accent-secondary: #00FFFF; /* Cyan */
+        --border-main: #000000;
+        --border-focus: #FF00FF;
+        --surface-1: rgba(255, 105, 180, 0.2);
+        --surface-2: rgba(255, 105, 180, 0.15);
+        --surface-button: rgba(0, 0, 0, 0.08);
+        --background: #FDFDFD;
+        --background-panel: transparent;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text-main);
+        background-color: var(--background);
+        transition: background-color 0.5s ease;
+      }
+      
+      /* Cartoon Network Theme Styles */
+      .title-cartoonnetwork {
+          font-family: 'Bangers', cursive;
+          color: white;
+          font-weight: 400;
+          letter-spacing: 0.05em;
+          -webkit-text-stroke: 3px black;
+          text-stroke: 3px black;
+          transform: rotate(-2deg);
+          text-shadow: 4px 4px 0px var(--accent);
+      }
+
+      /* Element Styles */
+      main > div[class*="rounded-2xl"] {
+          border-width: 3px !important;
+          box-shadow: 6px 6px 0px #000;
+          transform: rotate(1deg);
+          border-radius: 1.75rem;
+      }
+      .max-w-md.mx-auto.rounded-2xl {
+          border-width: 2px !important;
+          box-shadow: 4px 4px 0px #000;
+          transition: all 0.2s ease-out;
+          transform: rotate(-1deg);
+      }
+      .min-h-[150px],
+      .border-dashed {
+          border-width: 2px !important;
+          box-shadow: 4px 4px 0px #000;
+      }
+      textarea,
+      #model-select {
+          border-width: 2px !important;
+          box-shadow: 2px 2px 0px #000;
+          transition: all 0.1s ease-in-out;
+      }
+      textarea:focus,
+      #model-select:focus {
+          box-shadow: 1px 1px 0px #000;
+          transform: translate(1px, 1px);
+      }
+      button.bg-accent {
+          border: 2px solid #000;
+          box-shadow: 4px 4px 0px #000;
+          transition: all 0.15s ease-out !important;
+      }
+      button.bg-accent:hover {
+          box-shadow: 6px 6px 0px #000;
+          transform: translate(-2px, -2px);
+          opacity: 1 !important;
+      }
+      button.bg-accent:active {
+          box-shadow: 1px 1px 0px #000;
+          transform: translate(3px, 3px);
+          transition-duration: 0.05s !important;
+      }
+
+      /* Syntax Highlighting Styles */
+      .token-param {
+          color: var(--primary); 
+          font-weight: 600;
+      }
+      .token-value {
+          color: var(--accent-secondary);
+          font-weight: bold;
+      }
+      .token-keyword {
+          color: var(--text-main); 
+          font-style: italic;
+      }
+      .token-default {
+          color: var(--text-secondary);
+      }
+      
+      /* Decorative Shapes */
+      .decorative-shapes-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          pointer-events: none;
+          z-index: 5; /* Below content (z-10), above background (-z-10) */
+      }
+      .decorative-shapes-container > * {
+          position: absolute;
+          opacity: 1;
+          transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+          will-change: transform, opacity;
+      }
+
+      /* === Cartoon Network Shapes === */
+      @keyframes cn-wiggle {
+          0%, 100% { transform: rotate(-2deg); }
+          50% { transform: rotate(2deg); }
+      }
+      .shape-cn-squiggle {
+          top: 10vh;
+          left: calc(50% - 35rem);
+          transform: rotate(15deg);
+          animation: cn-wiggle 8s ease-in-out infinite;
+      }
+      .shape-cn-star {
+          bottom: 5vh;
+          right: calc(50% - 38rem);
+          transform: rotate(-10deg) scale(0.9);
+          animation: cn-wiggle 10s ease-in-out infinite reverse;
+      }
+      @keyframes cn-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+      }
+      .shape-cn-bubbles {
+          bottom: 10vh;
+          left: calc(50% - 40rem);
+          width: 80px;
+          height: 80px;
+          animation: cn-bounce 6s ease-in-out infinite;
+      }
+      .shape-cn-bubbles > div {
+          position: absolute;
+          border-radius: 50%;
+          background-color: var(--primary);
+          border: 3px solid #000;
+      }
+      .shape-cn-bubbles .bubble1 { width: 40px; height: 40px; top: 0; left: 20px; }
+      .shape-cn-bubbles .bubble2 { width: 25px; height: 25px; top: 45px; left: 0; }
+      .shape-cn-bubbles .bubble3 { width: 30px; height: 30px; top: 35px; right: 0; }
+      @keyframes cn-shake {
+          0%, 100% { transform: translate(0, 0) rotate(5deg); }
+          25% { transform: translate(2px, -2px) rotate(3deg); }
+          50% { transform: translate(0, 0) rotate(5deg); }
+          75% { transform: translate(-2px, 2px) rotate(7deg); }
+      }
+      .shape-cn-zigzag {
+          top: 15vh;
+          right: calc(50% - 41rem);
+          transform: rotate(5deg);
+          animation: cn-shake 5s ease-in-out infinite;
+      }
+      @keyframes cn-spin {
+        from { transform: translateX(-50%) rotate(0deg) scale(1); }
+        to { transform: translateX(-50%) rotate(360deg) scale(1.1); }
+      }
+      .shape-cn-star-middle {
+        bottom: 20vh;
+        left: 50%;
+        transform-origin: center;
+        animation: cn-spin 10s linear infinite alternate;
+      }
+      @keyframes cn-pop {
+          0%, 100% { transform: translateX(-50%) scale(0.9); opacity: 1; }
+          50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+          99% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+      }
+      .shape-cn-pow-middle {
+          bottom: 5vh;
+          left: 50%;
+          transform: translateX(-50%);
+          animation: cn-pop 4s ease-in-out infinite;
+      }
+      
+      /* === Shapes Responsive Styles === */
+      @media (max-width: 1280px) {
+          .shape-cn-squiggle { left: 2vw; top: 15vh; }
+          .shape-cn-star { right: 2vw; bottom: 8vh; }
+          .shape-cn-bubbles { left: 1vw; }
+          .shape-cn-zigzag { right: 2vw; }
+      }
+      @media (max-width: 768px) {
+          .shape-cn-squiggle { display: none; }
+          .shape-cn-star { transform: scale(0.7); right: 1vw; bottom: 15vh;}
+          .shape-cn-bubbles { display: none; }
+          .shape-cn-zigzag { transform: scale(0.8); top: 12vh; right: 2vw;}
+          .shape-cn-star-middle, .shape-cn-pow-middle {
+              display: none;
+          }
+      }
+      
+      /* About Section Styles */
+      .feature-card {
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+        border-width: 3px !important;
+        box-shadow: 4px 4px 0px #000;
+        transform: rotate(-1deg);
+      }
+      .feature-card:hover {
+        transform: translate(-3px, -8px) rotate(-1deg);
+        box-shadow: 7px 7px 0px var(--accent);
+      }
+      
+      /* Footer "Made By" Link Styles */
+      .made-by-link {
+          text-decoration: none;
+          background-color: var(--surface-button);
+          color: var(--text-secondary);
+          border: 3px solid #000;
+          box-shadow: 4px 4px 0px #000;
+          transform: rotate(1deg);
+      }
+      .made-by-link strong {
+          color: var(--text-main);
+          font-weight: 700;
+      }
+      .made-by-link:hover {
+          color: var(--text-main);
+          transform: translate(-2px, -2px) rotate(1deg);
+          box-shadow: 6px 6px 0px var(--accent);
+      }
+      .made-by-link:hover strong {
+          color: var(--accent);
+      }
+      .made-by-link:active {
+          box-shadow: 1px 1px 0px #000;
+          transform: translate(3px, 3px) rotate(1deg);
+          transition-duration: 0.05s !important;
+      }
+
+      /* Confetti Easter Egg Styles */
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-10vh) rotateZ(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(110vh) rotateZ(720deg);
+          opacity: 0;
+        }
+      }
+      .confetti {
+          position: absolute;
+          top: 0;
+          opacity: 0;
+          animation-name: confetti-fall;
+          animation-timing-function: linear;
+          animation-iteration-count: 1;
+          animation-fill-mode: forwards;
+      }
+    </style>
+<!-- Add Babel Standalone for in-browser JSX/TSX transpilation -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                  '4xl': '2rem',
+                },
+                colors: {
+                    primary: 'var(--primary)',
+                    accent: 'var(--accent)',
+                    'accent-secondary': 'var(--accent-secondary)',
+                    'text-main': 'var(--text-main)',
+                    'text-secondary': 'var(--text-secondary)',
+                    'text-heading': 'var(--text-heading)',
+                    'border-main': 'var(--border-main)',
+                    'border-focus': 'var(--border-focus)',
+                    'surface-1': 'var(--surface-1)',
+                    'surface-2': 'var(--surface-2)',
+                    'surface-button': 'var(--surface-button)',
+                    'background-panel': 'var(--background-panel)',
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                },
+            }
+        }
+    }
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel" data-type="module" src="/index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

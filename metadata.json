@@ -1,0 +1,5 @@
+{
+  "name": "final RepliCat 4",
+  "description": "An application to analyze images to generate reverse prompts, and engineer optimized prompts for various AI models like Veo, Midjourney, and DALL-E.",
+  "requestFramePermissions": []
+}
